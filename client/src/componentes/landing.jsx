@@ -18,7 +18,7 @@ const slides = [
     image: imagem2,
     title: "Crie a sua conta e realize a sua doação!",
     description:
-      "Aqui no *nome da empresa* você pode doar/receber doações de uma maneira muito mais fácil.",
+      "Na Simple Donations você pode doar/receber doações de uma maneira rápida e fácil.",
   },
 ];
 
