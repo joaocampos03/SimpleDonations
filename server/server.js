@@ -61,4 +61,32 @@ app.get('/doacoes', async (req, res) => {
     }
 })
 
+app.delete('/doacoes/:custom_id', async (req, res) => {
+  try {
+    const customId = parseInt(req.params.custom_id, 10)
+
+    await prisma.produtos.delete({
+      where: {
+        custom_id: customId,
+      },
+    })
+    res.status(200).json({ messsage: 'Doação deletada com sucesso!'})
+  } catch (error) {
+    console.error('Erro ao deletar doação:', error)
+    res.status(500).json({ error: 'Erro ao deletar doação', detalhes: error.message})
+  }
+})
+
+app.get('/home', (req, res) => {
+  res.sendStatus(204)
+})
+
+app.get('/registrar', (req, res) => {
+  res.sendStatus(204)
+})
+
+app.get('/login', (req, res) => {
+  res.sendStatus(204)
+})
+
 app.listen(3000)
