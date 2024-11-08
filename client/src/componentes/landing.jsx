@@ -124,26 +124,6 @@ const Landing = () => {
           </p>
         </div>
       </div>
-      <div>
-        <div className="flex items-center my-4">
-          <div className="flex-grow h-1 bg-gray-300" />
-          <span className="mx-4 font-semibold text-gray-500">
-            Cards (Placeholder)
-          </span>
-          <div className="flex-grow h-1 bg-gray-300" />
-        </div>
-        <Card />
-      </div>
-      <div className="flex items-center my-4">
-        <div className="flex-grow h-1 bg-gray-300" />
-        <span className="mx-4 font-semibold text-gray-500">
-          Página informações (Placeholder)
-        </span>
-        <div className="flex-grow h-1 bg-gray-300" />
-      </div>
-      <div>
-        <Dados />
-      </div>
     </div>
   );
 };

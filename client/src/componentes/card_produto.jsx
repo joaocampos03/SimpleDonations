@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import Header from "./header.jsx";
 
 // Mock de dados das doações
 const donations = [
@@ -43,46 +44,49 @@ const donations = [
 ];
 
 const Card = ({ title, image, description, isOpen, toggleOpen }) => (
-  <div className="bg-white shadow-md rounded-md overflow-hidden w-full max-w-md mx-auto relative">
-    {/* Imagem com bordas arredondadas */}
-    <img
-      src={image}
-      alt={title}
-      className="w-full h-48 object-cover rounded-t-md"
-    />
-    {/* Título e botão de seta */}
-    <div className="p-4 flex flex-col items-center">
-      <h2 className="text-black font-bold text-center">{title}</h2>
-      <button
-        onClick={toggleOpen}
-        className="text-blue-500 mt-2 flex items-center justify-center"
-      >
-        <span className={`${isOpen ? "rotate-180" : ""}`}>▼</span>{" "}
-        {/* Seta rotaciona */}
-      </button>
-    </div>
-    {/* Acordeão para descrição e botões */}
-    <motion.div
-      initial={{ height: 0 }}
-      animate={{ height: isOpen ? "auto" : 0 }}
-      transition={{ duration: 0.3 }}
-      className={`absolute bottom-0 left-0 w-full overflow-hidden`}
-    >
-      <div className="bg-white">
-        <p className="p-4 text-center">{description}</p>
-        <div className="flex">
-          <button className="bg-blue-500 font-semibold text-white p-2 w-1/2">
-            Saiba mais
-          </button>
-          <button
-            onClick={toggleOpen}
-            className="bg-red-500 font-semibold text-white p-2 w-1/2"
-          >
-            Voltar
-          </button>
-        </div>
+  <div>
+    <Header />
+    <div className="bg-white shadow-md rounded-md overflow-hidden w-full max-w-md mx-auto relative">
+      {/* Imagem com bordas arredondadas */}
+      <img
+        src={image}
+        alt={title}
+        className="w-full h-48 object-cover rounded-t-md"
+      />
+      {/* Título e botão de seta */}
+      <div className="p-4 flex flex-col items-center">
+        <h2 className="text-black font-bold text-center">{title}</h2>
+        <button
+          onClick={toggleOpen}
+          className="text-blue-500 mt-2 flex items-center justify-center"
+        >
+          <span className={`${isOpen ? "rotate-180" : ""}`}>▼</span>{" "}
+          {/* Seta rotaciona */}
+        </button>
       </div>
-    </motion.div>
+      {/* Acordeão para descrição e botões */}
+      <motion.div
+        initial={{ height: 0 }}
+        animate={{ height: isOpen ? "auto" : 0 }}
+        transition={{ duration: 0.3 }}
+        className={`absolute bottom-0 left-0 w-full overflow-hidden`}
+      >
+        <div className="bg-white">
+          <p className="p-4 text-center">{description}</p>
+          <div className="flex">
+            <button className="bg-blue-500 font-semibold text-white p-2 w-1/2">
+              Saiba mais
+            </button>
+            <button
+              onClick={toggleOpen}
+              className="bg-red-500 font-semibold text-white p-2 w-1/2"
+            >
+              Voltar
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </div>
   </div>
 );
 
@@ -92,7 +96,7 @@ const Animacard = () => {
   const toggleCard = (id) => {
     setOpenCards((prev) => ({
       ...prev,
-      [id]: !prev[id], // Inverte o estado do card correspondente
+      [id]: !prev[id],
     }));
   };
 
@@ -104,8 +108,8 @@ const Animacard = () => {
           title={donation.title}
           image={donation.image}
           description={donation.description}
-          isOpen={!!openCards[donation.id]} // Verifica se o card está aberto
-          toggleOpen={() => toggleCard(donation.id)} // Passa o ID do card
+          isOpen={!!openCards[donation.id]}
+          toggleOpen={() => toggleCard(donation.id)}
         />
       ))}
     </div>
