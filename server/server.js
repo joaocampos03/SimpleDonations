@@ -2,11 +2,20 @@ import express from 'express'
 import { PrismaClient } from '@prisma/client'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
+import { v2 as cloudinary } from 'cloudinary';
+import multer from 'multer';
+import cors from 'cors';
 
 dotenv.config()
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+})
 
 const prisma = new PrismaClient()
 const app = express()
+app.use(cors());
 app.use(express.json())
 
 mongoose.connect(process.env.DATABASE_URL)
@@ -26,6 +35,21 @@ async function getNextSequenceValue(sequenceName) {
     )
     return result.seq
 }
+
+const upload = multer({ dest: 'uploads/' });
+
+// Endpoint para realizar o upload da imagem para o Cloudinary
+app.post('/upload', upload.single('image'), async (req, res) => {
+    try {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'doacoes', // opcional: nome da pasta no Cloudinary
+      });
+      res.status(201).json({ url: result.secure_url });
+    } catch (error) {
+      console.error('Erro ao fazer upload da imagem:', error);
+      res.status(500).json({ error: 'Erro ao fazer upload da imagem', detalhes: error.message });
+    }
+});
 
 //Endpoint registra doação
 app.post('/registrarDoacao', async (req, res) => {
@@ -52,7 +76,7 @@ app.post('/registrarDoacao', async (req, res) => {
     }
 })
 
-//Endpoint lista todos as doacoes
+//Endpoint lista todas as doacoes
 app.get('/doacoes', async (req, res) => {
     try {
       const produtos = await prisma.produtos.findMany()
