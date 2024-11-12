@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import loginImg from "../assets/imagem2.jpg";
+import { useNavigate } from "react-router-dom";
 
 export default function Cadastro() {
   const [name, setName] = useState("");
@@ -10,6 +11,8 @@ export default function Cadastro() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isRegistered, setIsRegistered] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -54,7 +57,7 @@ export default function Cadastro() {
 
       <div className="bg-gray-100 flex flex-col justify-center">
         <form
-          className="max-w-[400px] w-full mx-auto bg-white p-4"
+          className="shadow-lg max-w-[400px] w-full mx-auto bg-white p-4"
           onSubmit={handleRegister}
         >
           <h2 className="text-4xl font-bold text-center py-6">Cadastro</h2>
@@ -144,6 +147,7 @@ export default function Cadastro() {
             <button
               type="button"
               className="hover:text-indigo-400 py-2 text-black"
+              onClick={() => navigate("/login")}
             >
               Já tem uma conta? Faça Login
             </button>

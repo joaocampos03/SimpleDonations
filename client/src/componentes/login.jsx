@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import loginImg from "../assets/imagem2.jpg";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Added state to handle login success
+
+  const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -38,7 +41,7 @@ export default function Login() {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 h-screen w-full">
+    <div className="shadow-lg grid grid-cols-1 sm:grid-cols-2 h-screen w-full">
       <div className="hidden sm:block">
         <img
           className="w-full h-dvh object-cover"
@@ -49,7 +52,7 @@ export default function Login() {
 
       <div className="bg-gray-100 flex flex-col justify-center">
         <form
-          className="max-w-[400px] w-full mx-auto bg-white p-4"
+          className="shadow-lg max-w-[400px] w-full mx-auto bg-white p-4"
           onSubmit={handleLogin}
         >
           <h2 className="text-4xl font-bold text-center py-6">
@@ -89,6 +92,7 @@ export default function Login() {
             <button
               type="button"
               className="hover:text-indigo-400 py-2 text-black"
+              onClick={() => navigate("/cadastro")}
             >
               Criar nova conta
             </button>
