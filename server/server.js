@@ -2,6 +2,9 @@ import express from 'express'
 import { PrismaClient } from '@prisma/client'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
+import { v2 as cloudinary } from 'cloudinary';
+import multer from 'multer';
+import cors from 'cors'
 
 dotenv.config()
 cloudinary.config({
