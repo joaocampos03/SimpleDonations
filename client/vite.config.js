@@ -7,14 +7,15 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      server: {
-        proxy: {
-          "/api": {
-            target: "https://simple-donations-backend.vercel.app",
-            changeOrigin: true,
-            rewrite: (path) => path.replace(/^\/api/, ""),
-          },
-        },
+    },
+  },
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://simple-donations-backend.vercel.app",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
       },
-    };
+    },
+  },
 });
