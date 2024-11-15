@@ -1,14 +1,21 @@
 import "../index.css";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "./AuthContext"; // Importing AuthContext
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate(); // Step 4: useNavigate hook
+  const navigate = useNavigate();
+  const { isAuthenticated, logout } = useContext(AuthContext); // Using AuthContext
 
   const handleNavigation = (path) => {
-    setIsOpen(false); // Optionally close the menu if it's open
+    setIsOpen(false);
     navigate(path);
+  };
+
+  const handleLogout = () => {
+    logout(); // Calls the logout function from AuthContext
+    navigate("/"); // Redirects to home after logout
   };
 
   return (
@@ -27,16 +34,19 @@ const Header = () => {
           <ul className="flex md:flex-row flex-col md:items-center md:gap-[4vw] gap-8">
             <li>
               <button
-                className="block w-full text-left px-4 py-2 hover:bg-slate-200"
+                className="block w-full text-left px-4 py-2 hover:text-gray-500"
                 onClick={() => handleNavigation("/")}
               >
                 Home
               </button>
             </li>
             <li>
-              <a className="hover:text-gray-500" href="componentes">
-                Comp. (Placeholder)
-              </a>
+              <button
+                className="hover:text-gray-500"
+                onClick={() => handleNavigation("/doacoes")}
+              >
+                Doações Disponíveis
+              </button>
             </li>
             <li>
               <a className="hover:text-gray-500" href="#">
@@ -45,13 +55,23 @@ const Header = () => {
             </li>
           </ul>
         </div>
+
         <div className="flex items-center gap-6">
-          <button
-            className="bg-[#a6c1ee] text-white px-3 py-1 rounded-full hover:bg-[#87acec] md:px-5 md:py-2"
-            onClick={() => handleNavigation("/cadastro")}
-          >
-            Nova Conta
-          </button>
+          {!isAuthenticated ? (
+            <button
+              className="bg-indigo-600 text-white px-3 py-1 rounded-full  hover:bg-indigo-500 md:px-5 md:py-2"
+              onClick={() => handleNavigation("/cadastro")}
+            >
+              Nova Conta
+            </button>
+          ) : (
+            <button
+              className="bg-red-500 text-white px-3 py-1 rounded-full hover:bg-red-400 md:px-5 md:py-2"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+          )}
 
           <button
             onClick={() => setIsOpen(!isOpen)}
@@ -104,28 +124,20 @@ const Header = () => {
               </button>
             </li>
             <li>
-              <a
+              <button
                 className="block w-full text-left px-4 py-2 hover:bg-slate-200"
-                href="#"
+                onClick={() => handleNavigation("/doacoes")}
               >
-                About
-              </a>
+                Doações Disponíveis
+              </button>
             </li>
             <li>
-              <a
+              <button
                 className="block w-full text-left px-4 py-2 hover:bg-slate-200"
-                href="#"
+                onClick={() => handleNavigation("/")}
               >
-                Services
-              </a>
-            </li>
-            <li>
-              <a
-                className="block w-full text-left px-4 py-2 hover:bg-slate-200"
-                href="#"
-              >
-                Contact
-              </a>
+                Contato
+              </button>
             </li>
           </ul>
         </div>

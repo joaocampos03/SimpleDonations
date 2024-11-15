@@ -1,44 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import loginImg from "../assets/imagem2.jpg";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "./AuthContext"; // Importing AuthContext
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Added state to handle login success
-
+  const { login } = useContext(AuthContext); // Using login function from AuthContext
   const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
 
-    const hardcodedUsername = "admin";
-    const hardcodedPassword = "admin";
-
-    if (username === hardcodedUsername && password === hardcodedPassword) {
-      setIsLoggedIn(true); // Set login success state
+    // Using AuthContext's login method with hardcoded values for now
+    const isLoginSuccessful = login(username, password);
+    if (isLoginSuccessful) {
+      navigate("/dados"); // Redirect to protected route after successful login
     } else {
       setError("Usuário ou senha incorretos");
     }
   };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    if (name === "username") {
-      setUsername(value);
-    } else if (name === "password") {
-      setPassword(value);
-    }
-  };
-
-  if (isLoggedIn) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <h1 className="text-4xl font-bold">Welcome to the Dashboard!</h1>
-      </div>
-    );
-  }
 
   return (
     <div className="shadow-lg grid grid-cols-1 sm:grid-cols-2 h-screen w-full">
@@ -65,7 +47,7 @@ export default function Login() {
               type="text"
               name="username"
               value={username}
-              onChange={handleInputChange}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
           <div className="flex flex-col py-2">
@@ -75,7 +57,7 @@ export default function Login() {
               type="password"
               name="password"
               value={password}
-              onChange={handleInputChange}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           {error && <p className="text-red-500 text-center py-2">{error}</p>}
