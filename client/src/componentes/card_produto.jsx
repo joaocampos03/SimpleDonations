@@ -6,7 +6,11 @@ import Header from "./header.jsx";
 import ReactPaginate from "react-paginate";
 
 // Card Component
+import { useNavigate } from "react-router-dom";
+
+// Card Component
 const Card = ({
+  id,
   title,
   image,
   description,
@@ -14,47 +18,60 @@ const Card = ({
   status,
   isOpen,
   toggleOpen,
-}) => (
-  <div className="bg-white shadow-md rounded-md overflow-hidden w-full max-w-md mx-auto relative">
-    <img
-      src={image || "https://via.placeholder.com/150"}
-      alt={title}
-      className="w-full h-48 object-cover rounded-t-md"
-    />
-    <div className="p-4 flex flex-col items-center">
-      <h2 className="text-black font-bold text-center">{title}</h2>
-      <p className="text-gray-600 text-sm">{location}</p>
-      <p className="text-gray-500 text-xs">{status}</p>
-      <button
-        onClick={toggleOpen}
-        className="text-blue-500 mt-2 flex items-center justify-center"
-      >
-        <span className={`${isOpen ? "rotate-180" : ""}`}>▼</span>
-      </button>
-    </div>
-    <motion.div
-      initial={{ height: 0 }}
-      animate={{ height: isOpen ? "auto" : 0 }}
-      transition={{ duration: 0.3 }}
-      className={`absolute bottom-0 left-0 w-full overflow-hidden`}
-    >
-      <div className="bg-white">
-        <p className="p-4 text-center">{description}</p>
-        <div className="flex">
-          <button className="bg-blue-500 font-semibold text-white p-2 w-1/2">
-            Saiba mais
-          </button>
-          <button
-            onClick={toggleOpen}
-            className="bg-red-500 font-semibold text-white p-2 w-1/2"
-          >
-            Voltar
-          </button>
-        </div>
+}) => {
+  const navigate = useNavigate();
+
+  const handleMoreInfo = () => {
+    navigate(`/dados/${title}`, {
+      state: { id, title, image, description, location, status },
+    });
+  };
+
+  return (
+    <div className="bg-white shadow-md rounded-md overflow-hidden w-full max-w-md mx-auto relative">
+      <img
+        src={image || "https://via.placeholder.com/150"}
+        alt={title}
+        className="w-full h-48 object-cover rounded-t-md"
+      />
+      <div className="p-4 flex flex-col items-center">
+        <h2 className="text-black font-bold text-center">{title}</h2>
+        <p className="text-gray-600 text-sm">{location}</p>
+        <p className="text-gray-500 text-xs">{status}</p>
+        <button
+          onClick={toggleOpen}
+          className="text-blue-500 mt-2 flex items-center justify-center"
+        >
+          <span className={`${isOpen ? "rotate-180" : ""}`}>▼</span>
+        </button>
       </div>
-    </motion.div>
-  </div>
-);
+      <motion.div
+        initial={{ height: 0 }}
+        animate={{ height: isOpen ? "auto" : 0 }}
+        transition={{ duration: 0.3 }}
+        className={`absolute bottom-0 left-0 w-full overflow-hidden`}
+      >
+        <div className="bg-white">
+          <p className="p-4 text-center">{description}</p>
+          <div className="flex">
+            <button
+              onClick={handleMoreInfo}
+              className="bg-blue-500 font-semibold text-white p-2 w-1/2"
+            >
+              Saiba mais
+            </button>
+            <button
+              onClick={toggleOpen}
+              className="bg-red-500 font-semibold text-white p-2 w-1/2"
+            >
+              Voltar
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
 
 // Produtos Component (Main Page with Pagination)
 const Produtos = () => {
