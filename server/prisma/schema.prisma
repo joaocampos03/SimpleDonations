@@ -20,6 +20,19 @@ model Produtos {
   desc_prod   String
   loc_prod    String
   data_doacao String
-  img_prod    String
+  img_prod    String[]
   status      String
+}
+
+model Cadastro {
+  id_cadastro String   @id @map("_id") @db.ObjectId
+  nome        String
+  nickname    String   @unique
+  data_nasc   String
+  genero      String?
+  email       String   @unique
+  senha       String
+  endereco    String?
+  telefone    String
+  documento   String   @unique
 }

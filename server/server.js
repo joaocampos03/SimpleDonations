@@ -36,11 +36,40 @@ async function getNextSequenceValue(sequenceName) {
     return result.seq
 }
 
+const upload = multer({ dest: 'uploads/' });
+
+//Endpoint upload de imagem
+app.post('/upload', upload.array('images', 3), async (req, res) => {
+  try {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: 'Nenhuma imagem enviada.' });
+    }
+
+    // Faz o upload de cada imagem ao Cloudinary
+    const uploadPromises = req.files.map(file =>
+      cloudinary.uploader.upload(file.path, { folder: 'doacoes' })
+    );
+    const uploadResults = await Promise.all(uploadPromises);
+
+    // Extrai URLs seguras das imagens
+    const imageUrls = uploadResults.map(result => result.secure_url);
+
+    res.status(201).json({
+      message: 'Imagens carregadas com sucesso!',
+      urls: imageUrls,
+    });
+  } catch (error) {
+    console.error('Erro ao fazer upload das imagens:', error);
+    res.status(500).json({ error: 'Erro ao fazer upload das imagens', detalhes: error.message });
+  }
+});
+
 //Endpoint registra doação
 app.post('/registrarDoacao', async (req, res) => {
     try {
       const customId = await getNextSequenceValue('produtoid')
-  
+      const imgProd = Array.isArray(req.body.img_prod) ? req.body.img_prod : [];
+
       const novoProduto = await prisma.produtos.create({
         data: {
           id: undefined,
@@ -49,7 +78,7 @@ app.post('/registrarDoacao', async (req, res) => {
           desc_prod: req.body.desc_prod,
           loc_prod: req.body.loc_prod,
           data_doacao: req.body.data_prod,
-          img_prod: req.body.img_prod,
+          img_prod: imgProd,
           status: req.body.status
         }
       })
@@ -61,7 +90,7 @@ app.post('/registrarDoacao', async (req, res) => {
     }
 })
 
-//Endpoint lista todos as doacoes
+//Endpoint lista todas as doacoes
 app.get('/doacoes', async (req, res) => {
     try {
       const produtos = await prisma.produtos.findMany()
@@ -134,6 +163,28 @@ app.delete('/deletaProduto/:custom_id', async (req, res) => {
 
 app.get('/home', (req, res) => {
   res.sendStatus(204)
+})
+
+app.post('/registrar', async (req, res) => {
+  try {
+
+    const novoCadastro = await prisma.cadastro.create({
+      data: {
+        id: undefined,
+        nome: req.body.titulo_prod,
+        desc_prod: req.body.desc_prod,
+        loc_prod: req.body.loc_prod,
+        data_doacao: req.body.data_prod,
+        img_prod: req.body.img_prod,
+        status: req.body.status
+      }
+    })
+
+    res.status(201).json(novoCadastro)
+  } catch (error) {
+    console.error('Erro ao registrar doação:', error)
+    res.status(500).json({ error: 'Erro ao registrar doação', detalhes: error.message })
+  }
 })
 
 app.get('/registrar', (req, res) => {
