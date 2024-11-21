@@ -36,22 +36,28 @@ async function getNextSequenceValue(sequenceName) {
     return result.seq
 }
 
-const upload = multer({ dest: 'uploads/' });
+const upload = multer();
 
-//Endpoint upload de imagem
 app.post('/upload', upload.array('images', 3), async (req, res) => {
   try {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ error: 'Nenhuma imagem enviada.' });
     }
 
-    // Faz o upload de cada imagem ao Cloudinary
     const uploadPromises = req.files.map(file =>
-      cloudinary.uploader.upload(file.path, { folder: 'doacoes' })
+      new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: 'doacoes' },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+          }
+        );
+        stream.end(file.buffer);
+      })
     );
-    const uploadResults = await Promise.all(uploadPromises);
 
-    // Extrai URLs seguras das imagens
+    const uploadResults = await Promise.all(uploadPromises);
     const imageUrls = uploadResults.map(result => result.secure_url);
 
     res.status(201).json({
