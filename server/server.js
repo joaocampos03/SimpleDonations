@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 import { v2 as cloudinary } from 'cloudinary';
 import multer from 'multer';
 import cors from 'cors'
+import bcrypt from 'bcrypt'
 
 dotenv.config()
 cloudinary.config({
@@ -171,25 +172,50 @@ app.get('/home', (req, res) => {
   res.sendStatus(204)
 })
 
-app.post('/registrar', async (req, res) => {
+app.post('/cadastrarUsuario', async (req, res) => {
   try {
 
-    const novoCadastro = await prisma.cadastro.create({
-      data: {
-        id: undefined,
-        nome: req.body.titulo_prod,
-        desc_prod: req.body.desc_prod,
-        loc_prod: req.body.loc_prod,
-        data_doacao: req.body.data_prod,
-        img_prod: req.body.img_prod,
-        status: req.body.status
+    const { nome, nickname, data_nasc, email, senha, endereco, telefone, documento } = req.body
+
+    if (!nome || !nickname || !email || !senha) {
+      return res.status(400).json({ error: 'Nome, usuário, e-mail e senha são obrigatórios' })
+    }
+
+    const usuarioExistente = await prisma.cadastro.findFirst({
+      where: {
+        OR: [
+          { email },
+          { nickname },
+          { documento }
+        ]
       }
     })
 
-    res.status(201).json(novoCadastro)
+    if (usuarioExistente) {
+      return res.status(409).json({ error: "E-mail ou usuário já cadastrados!"})
+    }
+
+    const senhaHash = await bcrypt.hash(senha, 10)
+
+    const novoCadastro = await prisma.cadastro.create({
+      data: {
+        nome,
+        nickname,
+        data_nasc,
+        email,
+        senha: senhaHash,
+        endereco,
+        telefone,
+        documento
+      }
+    })
+
+    const { senha: _, ...usuarioSemSenha } = novoCadastro
+
+    res.status(201).json(usuarioSemSenha)
   } catch (error) {
-    console.error('Erro ao registrar doação:', error)
-    res.status(500).json({ error: 'Erro ao registrar doação', detalhes: error.message })
+    console.error('Erro ao registrar usuário:', error)
+    res.status(500).json({ error: 'Erro ao registrar usuário', detalhes: error.message })
   }
 })
 

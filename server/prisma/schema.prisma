@@ -25,11 +25,10 @@ model Produtos {
 }
 
 model Cadastro {
-  id_cadastro String   @id @map("_id") @db.ObjectId
+  id_cadastro String   @id @default(auto()) @map("_id") @db.ObjectId
   nome        String
   nickname    String   @unique
   data_nasc   String
-  genero      String?
   email       String   @unique
   senha       String
   endereco    String?
