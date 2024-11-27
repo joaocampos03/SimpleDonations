@@ -8,7 +8,7 @@ import Dados from "./componentes/dados.jsx";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Produtos from "./componentes/card_produto.jsx";
-import RegistrarDoacao from "./componentes/RegistrarDoacao.jsx"; // Importando o novo componente
+import RegistrarDoacao from "./componentes/registrardoacao.jsx"; // Importando o novo componente
 import ProtectedRoute from "./componentes/ProtectedRoute";
 import { AuthProvider } from "./componentes/AuthContext";
 
