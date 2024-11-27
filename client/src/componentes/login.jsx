@@ -10,13 +10,12 @@ export default function Login() {
   const { login } = useContext(AuthContext); // Using login function from AuthContext
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Using AuthContext's login method with hardcoded values for now
-    const isLoginSuccessful = login(username, password);
+    const isLoginSuccessful = await login(username, password);
     if (isLoginSuccessful) {
-      navigate("/dados"); // Redirect to protected route after successful login
+      navigate("/doacoes"); // Redirect to donations page after successful login
     } else {
       setError("Usuário ou senha incorretos");
     }

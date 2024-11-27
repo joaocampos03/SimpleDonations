@@ -6,35 +6,90 @@ export default function Cadastro() {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [birthDate, setBirthDate] = useState("");
-  const [gender, setGender] = useState("NA");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
+  const [document, setDocument] = useState("");
   const [error, setError] = useState("");
   const [isRegistered, setIsRegistered] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleRegister = (e) => {
+  // Função para lidar com o registro do usuário
+  const handleRegister = async (e) => {
     e.preventDefault();
 
-    // Simple validation
-    if (!name || !username || !birthDate || !email || !password) {
+    // Validação simples
+    if (
+      !name ||
+      !username ||
+      !birthDate ||
+      !email ||
+      !password ||
+      !phone ||
+      !document
+    ) {
       setError("Por favor, preencha todos os campos");
       return;
     }
 
-    // Simulating registration success
-    setIsRegistered(true);
+    // Monta os dados para enviar ao backend
+    const userData = {
+      nome: name,
+      nickname: username,
+      data_nasc: birthDate,
+      email: email,
+      senha: password,
+      endereco: address,
+      telefone: phone,
+      documento: document,
+    };
+
+    try {
+      // Envia a requisição POST ao backend para cadastrar o usuário
+      const response = await fetch(
+        "https://simple-donations-backendv4.vercel.app/cadastrarUsuario",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData), // Envia os dados como JSON
+        }
+      );
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Se a resposta for OK, o cadastro foi bem-sucedido
+        setIsRegistered(true);
+
+        // Redireciona para a página de login após 2 segundos
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      } else {
+        // Se houver erro, mostra a mensagem
+        setError(result.error || "Erro ao registrar o usuário");
+      }
+    } catch (error) {
+      setError("Erro ao enviar a requisição");
+      console.error("Erro ao registrar usuário:", error);
+    }
   };
 
+  // Função para lidar com mudanças nos campos de input
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === "name") setName(value);
     if (name === "username") setUsername(value);
     if (name === "birthDate") setBirthDate(value);
-    if (name === "gender") setGender(value);
     if (name === "email") setEmail(value);
     if (name === "password") setPassword(value);
+    if (name === "address") setAddress(value);
+    if (name === "phone") setPhone(value);
+    if (name === "document") setDocument(value);
   };
 
   if (isRegistered) {
@@ -96,23 +151,6 @@ export default function Cadastro() {
           </div>
 
           <div className="flex flex-col py-2">
-            <label>Gênero</label>
-            <select
-              className="border p-2"
-              name="gender"
-              value={gender}
-              onChange={handleInputChange}
-            >
-              <option value="NA" disabled hidden>
-                Selecione
-              </option>
-              <option value="Masculino">Masculino</option>
-              <option value="Feminino">Feminino</option>
-              <option value="Outro">Outro</option>
-            </select>
-          </div>
-
-          <div className="flex flex-col py-2">
             <label>Email</label>
             <input
               className="border p-2"
@@ -130,6 +168,39 @@ export default function Cadastro() {
               type="password"
               name="password"
               value={password}
+              onChange={handleInputChange}
+            />
+          </div>
+
+          <div className="flex flex-col py-2">
+            <label>Endereço</label>
+            <input
+              className="border p-2"
+              type="text"
+              name="address"
+              value={address}
+              onChange={handleInputChange}
+            />
+          </div>
+
+          <div className="flex flex-col py-2">
+            <label>Telefone</label>
+            <input
+              className="border p-2"
+              type="text"
+              name="phone"
+              value={phone}
+              onChange={handleInputChange}
+            />
+          </div>
+
+          <div className="flex flex-col py-2">
+            <label>Documento (CPF ou CNPJ)</label>
+            <input
+              className="border p-2"
+              type="text"
+              name="document"
+              value={document}
               onChange={handleInputChange}
             />
           </div>
