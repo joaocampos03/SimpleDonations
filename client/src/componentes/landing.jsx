@@ -1,11 +1,9 @@
 import "../index.css";
 import Header from "./header.jsx";
-import Dados from "./dados.jsx";
 import React from "react";
 import Slider from "react-slick";
 import imagem1 from "../assets/imagem1.jpg";
 import imagem2 from "../assets/imagem2.jpg";
-import Card from "./card_produto.jsx";
 
 const slides = [
   {

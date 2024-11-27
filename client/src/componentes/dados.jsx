@@ -1,16 +1,59 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import Header from "./header";
 import { useLocation, useParams } from "react-router-dom";
 
 const Dados = () => {
-  const { productName } = useParams();
+  const { productName } = useParams(); // Para pegar o nome do produto da URL
   const location = useLocation();
-  const productData = location.state;
+  const [productData, setProductData] = useState(null); // Estado para armazenar os dados do produto
+  const [loading, setLoading] = useState(true); // Estado para verificar se os dados estão carregando
+  const [error, setError] = useState(null); // Estado para armazenar erros
 
+  // Função para buscar os dados do produto a partir do endpoint
+  const fetchProductData = async () => {
+    try {
+      const response = await fetch(
+        "https://simple-donations-backendv4.vercel.app/doacoes"
+      );
+      const data = await response.json();
+
+      // Encontrando o produto com base no nome
+      const product = data.find(
+        (item) => item.nome_prod.toLowerCase() === productName.toLowerCase()
+      );
+
+      if (product) {
+        setProductData(product);
+      } else {
+        setError("Produto não encontrado");
+      }
+    } catch (error) {
+      setError("Erro ao carregar os dados");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // UseEffect para fazer a requisição quando o componente é montado
+  useEffect(() => {
+    fetchProductData();
+  }, [productName]);
+
+  // Se ainda estiver carregando ou houver erro, exibimos uma mensagem
+  if (loading) return <div>Carregando...</div>;
+  if (error) return <div>{error}</div>;
+
+  // Acessando o array de imagens
+  const images = productData.img_prod || [];
+
+  // Verificando se há mais de uma imagem
+  const isSingleImage = images.length === 1;
+
+  // Definindo configurações para o slider
   const settings = {
-    dots: false,
-    infinite: true,
+    dots: true,
+    infinite: images.length > 1, // Ativa o infinito apenas se houver mais de uma imagem
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
@@ -24,27 +67,37 @@ const Dados = () => {
       <div className="bg-gray-300 min-h-screen flex items-center justify-center">
         <div className="max-w-7xl w-full bg-white p-8 shadow-lg rounded-lg">
           <div className="flex flex-col md:flex-row items-start justify-between space-y-8 md:space-y-0 md:space-x-8">
+            {/* Se for uma única imagem, exibe apenas a imagem diretamente */}
             <div className="w-full md:w-1/2 mr-4 mb-4 md:mb-0">
-              <Slider {...settings}>
-                {[...Array(5)].map((_, index) => (
-                  <div key={index}>
-                    <img
-                      src={productData.image || `https://placehold.co/400x600`}
-                      alt={`Imagem ${index + 1}`}
-                      className="h-[624px] w-full object-cover rounded-lg shadow-md"
-                    />
-                  </div>
-                ))}
-              </Slider>
+              {isSingleImage ? (
+                <img
+                  src={images[0]}
+                  alt="Imagem única"
+                  className="h-[600px] w-full object-cover rounded-lg shadow-md"
+                />
+              ) : (
+                <Slider {...settings}>
+                  {images.map((imgUrl, index) => (
+                    <div key={index}>
+                      <img
+                        src={imgUrl}
+                        alt={`Imagem ${index + 1}`}
+                        className="h-[600px] w-full object-cover rounded-lg shadow-md"
+                      />
+                    </div>
+                  ))}
+                </Slider>
+              )}
             </div>
 
+            {/* Informações do produto */}
             <div className="w-full md:w-1/2 space-y-8">
               <div className="flex flex-col">
                 <label className="text-lg font-semibold mb-2">
                   Título do Produto
                 </label>
                 <input
-                  defaultValue={productData.title}
+                  defaultValue={productData.nome_prod}
                   className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
                   readOnly
                 />
@@ -54,7 +107,7 @@ const Dados = () => {
                   Descrição do Produto
                 </label>
                 <textarea
-                  defaultValue={productData.description}
+                  defaultValue={productData.desc_prod}
                   className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 resize-none h-24"
                   readOnly
                 />
@@ -74,7 +127,7 @@ const Dados = () => {
                   Localização
                 </label>
                 <input
-                  defaultValue={productData.location}
+                  defaultValue={productData.loc_prod}
                   className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
                   readOnly
                 />

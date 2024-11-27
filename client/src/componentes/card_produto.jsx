@@ -87,7 +87,7 @@ const Produtos = () => {
     const fetchDonations = async () => {
       try {
         const response = await fetch(
-          "https://simple-donations-backendv3.vercel.app/doacoes"
+          "https://simple-donations-backendv4.vercel.app/doacoes"
         );
         if (!response.ok) {
           throw new Error("Failed to fetch donations data");
@@ -129,8 +129,9 @@ const Produtos = () => {
             key={donation.custom_id}
             title={donation.nome_prod}
             image={
-              donation.img_prod !== "teste2"
-                ? donation.img_prod
+              // Usando a primeira imagem do array img_prod
+              donation.img_prod.length > 0
+                ? donation.img_prod[0]
                 : "https://via.placeholder.com/150"
             }
             description={donation.desc_prod}
