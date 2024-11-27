@@ -192,7 +192,12 @@ app.post('/cadastrarUsuario', async (req, res) => {
     })
 
     if (usuarioExistente) {
-      return res.status(409).json({ error: "E-mail ou usuário já cadastrados!"})
+      let campoDuplicado = '';
+      if (usuarioExistente.email === email) campoDuplicado = 'email';
+      else if (usuarioExistente.nickname === nickname) campoDuplicado = 'nome de usuário';
+      else if (usuarioExistente.documento === documento) campoDuplicado = 'documento';
+
+      return res.status(409).json({ error: `Já existe um usuário com o mesmo ${campoDuplicado}.` });
     }
 
     const senhaHash = await bcrypt.hash(senha, 10)
@@ -219,12 +224,40 @@ app.post('/cadastrarUsuario', async (req, res) => {
   }
 })
 
-app.get('/registrar', (req, res) => {
-  res.sendStatus(204)
-})
+app.post('/login', async (req, res) => {
+  try {
+    const { email, nickname, senha } = req.body;
 
-app.get('/login', (req, res) => {
-  res.sendStatus(204)
-})
+    if ((!email && !nickname) || !senha) {
+      return res.status(400).json({ error: 'E-mail ou usuário e senha são obrigatórios' });
+    }
+
+    const usuario = await prisma.cadastro.findFirst({
+      where: {
+        OR: [
+          { email },
+          { nickname },
+        ],
+      },
+    });
+
+    if (!usuario) {
+      return res.status(404).json({ error: 'Usuário não encontrado!' });
+    }
+
+    const senhaValida = await bcrypt.compare(senha, usuario.senha);
+
+    if (!senhaValida) {
+      return res.status(401).json({ error: 'Credenciais inválidas!' });
+    }
+
+    const { senha: _, ...usuarioSemSenha } = usuario;
+
+    res.status(200).json({ message: 'Login bem-sucedido!'});
+  } catch (error) {
+    console.error('Erro ao realizar login:', error);
+    res.status(500).json({ error: 'Erro ao realizar login', detalhes: error.message });
+  }
+});
 
 app.listen(3000)
