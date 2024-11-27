@@ -175,7 +175,7 @@ app.get('/home', (req, res) => {
 app.post('/cadastrarUsuario', async (req, res) => {
   try {
 
-    const { nome, nickname, data_nasc, email, senha, endereco, telefone, documento } = req.body
+    const { nome, nickname, data_nasc, email, senha, endereco, telefone, documento, perfil } = req.body
 
     if (!nome || !nickname || !email || !senha) {
       return res.status(400).json({ error: 'Nome, usuário, e-mail e senha são obrigatórios' })
@@ -211,7 +211,8 @@ app.post('/cadastrarUsuario', async (req, res) => {
         senha: senhaHash,
         endereco,
         telefone,
-        documento
+        documento,
+        perfil
       }
     })
 
