@@ -108,7 +108,7 @@ export default function CadastroDoacao() {
   // Configurações do carrossel
   const sliderSettings = {
     dots: true, // Indicadores de navegação
-    infinite: true, // Loop infinito
+    infinite: false, // Loop infinito
     speed: 500, // Velocidade de transição
     slidesToShow: 1, // Exibe 1 imagem por vez
     slidesToScroll: 1, // Navega uma imagem por vez
@@ -223,7 +223,7 @@ export default function CadastroDoacao() {
                     <img
                       src={URL.createObjectURL(imagem)}
                       alt={`Imagem ${index + 1}`}
-                      className="w-full h-64 object-cover rounded-lg shadow-lg"
+                      className="h-[600px] w-full object-cover rounded-lg shadow-md"
                     />
                   </div>
                 ))}
