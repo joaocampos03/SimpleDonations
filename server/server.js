@@ -152,12 +152,15 @@ app.put("/atualizaStatus/:custom_id", async (req, res) => {
       },
       data: {
         status: req.body.status,
+        data_res: req.body.data_res,
+        beneficiado: req.body.beneficiado
       },
     });
 
     res.status(200).json({
-      message: "Status do produto atualizado com sucesso!",
-      data: req.body,
+      message: "Produto atualizado com sucesso!",
+      data_res: req.body.data_res,
+      beneficiado: req.body.beneficiado
     });
   } catch (error) {
     console.error("Erro ao atualizar o status do produto:", error);
@@ -298,6 +301,30 @@ app.post("/login", async (req, res) => {
     res
       .status(500)
       .json({ error: "Erro ao realizar login", detalhes: error.message });
+  }
+});
+
+//Endpoint para trazer todos os endereços
+app.get("/enderecos", async (req, res) => {
+  try {
+
+    const enderecos = await prisma.cadastro.findMany({
+      where: {
+        perfil: "doador",
+      },
+    });
+
+    if (enderecos) {
+      res.status(200).json(enderecos.map((item) => item.endereco));
+    } else {
+      res.status(404).json({ message: "Sem endereços cadastrados!" });
+    }
+
+  } catch (error) {
+    console.error("Erro ao realizar busca:", error);
+    res
+      .status(500)
+      .json({ error: "Erro ao realizar busca", detalhes: error.message });
   }
 });
 
