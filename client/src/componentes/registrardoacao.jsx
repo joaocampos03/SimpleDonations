@@ -27,6 +27,12 @@ export default function CadastroDoacao() {
     setError(""); // Limpa qualquer mensagem de erro
   };
 
+  // Função para limpar as imagens
+  const clearImages = () => {
+    setImagens([]);
+    setError(""); // Limpa qualquer mensagem de erro relacionada a imagens
+  };
+
   // Função para lidar com o cadastro da doação
   const handleCadastroDoacao = async (e) => {
     e.preventDefault();
@@ -197,6 +203,16 @@ export default function CadastroDoacao() {
                   Registrar Doação
                 </button>
               </form>
+
+              {/* Botão para limpar as imagens */}
+              {imagens.length > 0 && (
+                <button
+                  onClick={clearImages}
+                  className="w-full py-2 mt-4 bg-red-600 hover:bg-red-500 text-white rounded-lg transition duration-200"
+                >
+                  Limpar Imagens
+                </button>
+              )}
             </div>
 
             <div className="w-full md:w-1/2 p-4 bg-white rounded-lg shadow-md">
