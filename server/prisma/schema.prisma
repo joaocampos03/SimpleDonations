@@ -22,6 +22,8 @@ model Produtos {
   data_doacao String
   img_prod    String[]
   status      String
+  data_res    String?
+  beneficiado String?
 }
 
 model Cadastro {

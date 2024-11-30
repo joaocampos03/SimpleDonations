@@ -288,10 +288,10 @@ app.post("/login", async (req, res) => {
 
     const { senha: _, ...usuarioSemSenha } = usuario;
 
-    // Incluindo o perfil na resposta
     res.status(200).json({
       message: "Login bem-sucedido!",
-      perfil: usuario.perfil, // Inclui o perfil do usuário
+      perfil: usuario.perfil,
+      nome: usuario.nome,
     });
   } catch (error) {
     console.error("Erro ao realizar login:", error);
