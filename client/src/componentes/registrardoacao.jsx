@@ -16,7 +16,15 @@ export default function CadastroDoacao() {
 
   // Função para lidar com a mudança nas imagens
   const handleImageChange = (e) => {
-    setImagens(Array.from(e.target.files));
+    const selectedImages = Array.from(e.target.files);
+
+    if (selectedImages.length + imagens.length > 3) {
+      setError("Você pode selecionar no máximo 3 imagens.");
+      return;
+    }
+
+    setImagens([...imagens, ...selectedImages]);
+    setError(""); // Limpa qualquer mensagem de erro
   };
 
   // Função para lidar com o cadastro da doação
@@ -167,7 +175,7 @@ export default function CadastroDoacao() {
                 </div>
 
                 <div className="flex flex-col py-2">
-                  <label>Imagens</label>
+                  <label>Imagens (máximo de 3)</label>
                   <input
                     className="border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
                     type="file"
