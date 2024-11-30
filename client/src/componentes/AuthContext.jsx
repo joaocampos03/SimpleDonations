@@ -5,16 +5,19 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [perfil, setPerfil] = useState(null); // Novo estado para o perfil
+  const [perfil, setPerfil] = useState(null); // Estado para o perfil
+  const [nome, setNome] = useState(null); // Novo estado para o nome
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const storedAuth = localStorage.getItem("isAuthenticated");
     const storedPerfil = localStorage.getItem("perfil");
+    const storedNome = localStorage.getItem("nome"); // Recupera o nome armazenado
     if (storedAuth === "true") {
       setIsAuthenticated(true);
-      setPerfil(storedPerfil); // Recupera o perfil armazenado
+      setPerfil(storedPerfil);
+      setNome(storedNome); // Define o nome no estado
     }
     setLoading(false);
   }, []);
@@ -41,8 +44,10 @@ export const AuthProvider = ({ children }) => {
       if (response.ok) {
         setIsAuthenticated(true);
         setPerfil(result.perfil); // Armazena o perfil
+        setNome(result.nome); // Armazena o nome
         localStorage.setItem("isAuthenticated", "true"); // Persist login state
         localStorage.setItem("perfil", result.perfil); // Armazena o perfil no localStorage
+        localStorage.setItem("nome", result.nome); // Armazena o nome no localStorage
         navigate("/doacoes"); // Redirect to donations page after login
       } else {
         return false; // If login fails, return false
@@ -56,14 +61,16 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setIsAuthenticated(false);
     setPerfil(null); // Limpa o perfil
+    setNome(null); // Limpa o nome
     localStorage.removeItem("isAuthenticated"); // Clear login state
     localStorage.removeItem("perfil"); // Limpa o perfil no localStorage
+    localStorage.removeItem("nome"); // Limpa o nome no localStorage
     navigate("/login");
   };
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, perfil, login, logout, loading }}
+      value={{ isAuthenticated, perfil, nome, login, logout, loading }}
     >
       {children}
     </AuthContext.Provider>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./header.jsx";
 import { useNavigate } from "react-router-dom";
 import Slider from "react-slick"; // Importando o Slider do react-slick
@@ -9,12 +9,34 @@ export default function CadastroDoacao() {
   const [local, setLocal] = useState("");
   const [data, setData] = useState("");
   const [imagens, setImagens] = useState([]);
+  const [enderecos, setEnderecos] = useState([]);
   const [error, setError] = useState("");
   const [isDoacaoRegistrada, setIsDoacaoRegistrada] = useState(false);
 
   const navigate = useNavigate();
 
-  // Função para lidar com a mudança nas imagens
+  // Fetch para carregar os endereços ao montar o componente
+  useEffect(() => {
+    const fetchEnderecos = async () => {
+      try {
+        const response = await fetch(
+          "https://simple-donations-backendv4.vercel.app/enderecos"
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setEnderecos(data); // Configurando os endereços recebidos
+        } else {
+          setError("Não foi possível carregar os endereços.");
+        }
+      } catch (error) {
+        console.error("Erro ao buscar endereços:", error);
+        setError("Erro ao carregar endereços.");
+      }
+    };
+
+    fetchEnderecos();
+  }, []);
+
   const handleImageChange = (e) => {
     const selectedImages = Array.from(e.target.files);
 
@@ -27,13 +49,11 @@ export default function CadastroDoacao() {
     setError(""); // Limpa qualquer mensagem de erro
   };
 
-  // Função para limpar as imagens
   const clearImages = () => {
     setImagens([]);
-    setError(""); // Limpa qualquer mensagem de erro relacionada a imagens
+    setError("");
   };
 
-  // Função para lidar com o cadastro da doação
   const handleCadastroDoacao = async (e) => {
     e.preventDefault();
 
@@ -105,16 +125,15 @@ export default function CadastroDoacao() {
     );
   }
 
-  // Configurações do carrossel
   const sliderSettings = {
-    dots: true, // Indicadores de navegação
-    infinite: false, // Loop infinito
-    speed: 500, // Velocidade de transição
-    slidesToShow: 1, // Exibe 1 imagem por vez
-    slidesToScroll: 1, // Navega uma imagem por vez
-    arrows: true, // Exibe as setas para navegação
-    autoplay: true, // Ativa o autoplay
-    autoplaySpeed: 2000, // Velocidade do autoplay
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: true,
+    autoplay: true,
+    autoplaySpeed: 2000,
   };
 
   return (
@@ -160,13 +179,21 @@ export default function CadastroDoacao() {
 
                 <div className="flex flex-col py-2">
                   <label>Local</label>
-                  <input
+                  <select
                     className="border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-                    type="text"
                     name="local"
                     value={local}
                     onChange={(e) => setLocal(e.target.value)}
-                  />
+                  >
+                    <option value="" disabled>
+                      Selecione um local
+                    </option>
+                    {enderecos.map((endereco, index) => (
+                      <option key={index} value={endereco}>
+                        {endereco}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div className="flex flex-col py-2">
@@ -186,9 +213,9 @@ export default function CadastroDoacao() {
                     className="border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
                     type="file"
                     multiple
-                    accept="image/*" // Apenas arquivos de imagem
+                    accept="image/*"
                     onChange={handleImageChange}
-                    capture="environment" // Tenta abrir a câmera do dispositivo
+                    capture="environment"
                   />
                 </div>
 
@@ -204,7 +231,6 @@ export default function CadastroDoacao() {
                 </button>
               </form>
 
-              {/* Botão para limpar as imagens */}
               {imagens.length > 0 && (
                 <button
                   onClick={clearImages}
@@ -216,7 +242,6 @@ export default function CadastroDoacao() {
             </div>
 
             <div className="w-full md:w-1/2 p-4 bg-white rounded-lg shadow-md">
-              {/* Carrossel para exibir as imagens selecionadas */}
               <Slider {...sliderSettings}>
                 {imagens.map((imagem, index) => (
                   <div key={index}>
