@@ -21,7 +21,7 @@ createRoot(document.getElementById("root")).render(
           <Route path="/login" element={<Login />} />
           <Route path="/cadastro" element={<Cadastro />} />
           <Route
-            path="/dados/:productName"
+            path="/dados/:customId"
             element={<ProtectedRoute element={<Dados />} />}
           />
           <Route
@@ -30,7 +30,12 @@ createRoot(document.getElementById("root")).render(
           />
           <Route
             path="/registrar-doacao"
-            element={<ProtectedRoute element={<RegistrarDoacao />} />} // Rota para a página de registrar doação
+            element={
+              <ProtectedRoute
+                element={<RegistrarDoacao />}
+                restrictedToDoador
+              />
+            } // Restrição de "doador"
           />
         </Routes>
       </AuthProvider>

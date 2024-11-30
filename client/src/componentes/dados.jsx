@@ -4,7 +4,7 @@ import Header from "./header";
 import { useLocation, useParams } from "react-router-dom";
 
 const Dados = () => {
-  const { productName } = useParams(); // Para pegar o nome do produto da URL
+  const { customId } = useParams(); // Para pegar o customId da URL
   const location = useLocation();
   const [productData, setProductData] = useState(null); // Estado para armazenar os dados do produto
   const [loading, setLoading] = useState(true); // Estado para verificar se os dados estão carregando
@@ -18,9 +18,9 @@ const Dados = () => {
       );
       const data = await response.json();
 
-      // Encontrando o produto com base no nome
+      // Encontrando o produto com base no customId
       const product = data.find(
-        (item) => item.nome_prod.toLowerCase() === productName.toLowerCase()
+        (item) => item.custom_id === parseInt(customId) // Ajustando para comparar com o customId
       );
 
       if (product) {
@@ -38,7 +38,7 @@ const Dados = () => {
   // UseEffect para fazer a requisição quando o componente é montado
   useEffect(() => {
     fetchProductData();
-  }, [productName]);
+  }, [customId]);
 
   // Se ainda estiver carregando ou houver erro, exibimos uma mensagem
   if (loading) return <div>Carregando...</div>;
@@ -117,7 +117,7 @@ const Dados = () => {
                   Status do Produto
                 </label>
                 <input
-                  defaultValue={productData.status}
+                  defaultValue="Disponível" // Status fixo como "disponível"
                   className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
                   readOnly
                 />

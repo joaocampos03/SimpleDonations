@@ -34,7 +34,7 @@ export default function Cadastro() {
       return;
     }
 
-    // Monta os dados para enviar ao backend
+    // Monta os dados para enviar ao backend, incluindo o perfil como "doador"
     const userData = {
       nome: name,
       nickname: username,
@@ -44,6 +44,7 @@ export default function Cadastro() {
       endereco: address,
       telefone: phone,
       documento: document,
+      perfil: "beneficiado",
     };
 
     try {

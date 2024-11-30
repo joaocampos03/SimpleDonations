@@ -5,14 +5,16 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [perfil, setPerfil] = useState(null); // Novo estado para o perfil
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Check if the user is logged in when the component mounts
   useEffect(() => {
     const storedAuth = localStorage.getItem("isAuthenticated");
+    const storedPerfil = localStorage.getItem("perfil");
     if (storedAuth === "true") {
       setIsAuthenticated(true);
+      setPerfil(storedPerfil); // Recupera o perfil armazenado
     }
     setLoading(false);
   }, []);
@@ -38,7 +40,9 @@ export const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         setIsAuthenticated(true);
+        setPerfil(result.perfil); // Armazena o perfil
         localStorage.setItem("isAuthenticated", "true"); // Persist login state
+        localStorage.setItem("perfil", result.perfil); // Armazena o perfil no localStorage
         navigate("/doacoes"); // Redirect to donations page after login
       } else {
         return false; // If login fails, return false
@@ -51,12 +55,16 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setIsAuthenticated(false);
+    setPerfil(null); // Limpa o perfil
     localStorage.removeItem("isAuthenticated"); // Clear login state
+    localStorage.removeItem("perfil"); // Limpa o perfil no localStorage
     navigate("/login");
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, loading }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, perfil, login, logout, loading }}
+    >
       {children}
     </AuthContext.Provider>
   );
