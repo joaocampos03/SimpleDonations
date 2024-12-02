@@ -21,6 +21,10 @@ export default function Login() {
     }
   };
 
+  const handleNavigate = () => {
+    navigate("/");
+  };
+
   return (
     <div className="shadow-lg grid grid-cols-1 sm:grid-cols-2 h-screen w-full">
       <div className="hidden sm:block">
@@ -36,8 +40,11 @@ export default function Login() {
           className="shadow-lg max-w-[400px] w-full mx-auto bg-white p-4"
           onSubmit={handleLogin}
         >
-          <h2 className="text-4xl font-bold text-center py-6">
-            SimpleDonations
+          <h2
+            className="text-4xl font-bold text-center py-6 hover:bg-indigo-300 hover:cursor-pointer"
+            onClick={handleNavigate}
+          >
+            Simple Donations
           </h2>
           <div className="flex flex-col py-2">
             <label>Nome de Usuário</label>

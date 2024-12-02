@@ -84,9 +84,9 @@ const Dados = () => {
 
       if (response.ok) {
         const result = await response.json();
-        alert(result.message); // Exibe mensagem de sucesso
-        fetchProductData(); // Atualiza os dados do produto
-        navigate("/doacoes"); // Redireciona para a página /doacoes após o sucesso
+        alert(result.message);
+        fetchProductData();
+        navigate("/doacoes");
       } else {
         const errorData = await response.json();
         alert(`Erro: ${errorData.error}`);
@@ -118,7 +118,8 @@ const Dados = () => {
       if (response.ok) {
         const result = await response.json();
         alert(result.message); // Exibe mensagem de sucesso
-        fetchProductData(); // Atualiza os dados do produto
+        fetchProductData();
+        navigate("/doacoes");
       } else {
         const errorData = await response.json();
         alert(`Erro: ${errorData.error}`);
@@ -255,6 +256,20 @@ const Dados = () => {
                     Receber Doação
                   </button>
                 )}
+              {perfil === "doador" && productData.status === "indisponivel" && (
+                <div>
+                  <label className="block text-md font-bold text-gray-600">
+                    {formatarData(productData.data_res)} -{" "}
+                    {productData.beneficiado}
+                  </label>
+                  <button
+                    onClick={handleReestabelecerDoacao}
+                    className="bg-green-600 text-white rounded-lg p-3 w-full hover:bg-blue-500 transition duration-200"
+                  >
+                    Reestabelecer Doação
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

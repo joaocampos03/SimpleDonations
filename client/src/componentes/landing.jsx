@@ -3,17 +3,17 @@ import Header from "./header.jsx";
 import React from "react";
 import Slider from "react-slick";
 import imagem1 from "../assets/imagem1.jpg";
-import imagem2 from "../assets/imagem2.jpg";
+import imagem3 from "../assets/imagem3.jpg";
 
 const slides = [
   {
-    image: imagem1,
+    image: imagem3,
     title: "Simple Donations",
     description:
       "Aqui na Simple Donations, as suas doações ficam muito mais fáceis.",
   },
   {
-    image: imagem2,
+    image: imagem1,
     title: "Crie a sua conta e realize a sua doação!",
     description:
       "Na Simple Donations você pode doar/receber doações de uma maneira rápida e fácil.",
@@ -28,7 +28,7 @@ const Landing = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 8000,
+    autoplaySpeed: 10000,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
   };
@@ -84,41 +84,33 @@ const Landing = () => {
         <div className="flex-grow h-1 bg-gray-300" />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-8">
         <div className="bg-white text-black shadow-md p-6 rounded-md max-w-xl mx-auto">
-          <h2 className="text-xl font-semibold">Título 1</h2>
+          <h2 className="text-xl font-semibold">Faça sua Doação</h2>
           <p className="mt-2 text-center">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ullam
-            culpa quas magni fugiat sapiente iusto atque quae, at obcaecati
-            placeat ipsum aliquam ipsa, impedit animi delectus aperiam
-            inventore. Voluptate, dignissimos.
+            Doe com facilidade e transparência! Aqui você pode oferecer produtos
+            ou recursos para quem mais precisa. Cada doação faz a diferença.
           </p>
         </div>
         <div className="bg-white text-black shadow-md p-6 rounded-md max-w-xl mx-auto">
-          <h2 className="text-xl font-semibold">Título 2</h2>
+          <h2 className="text-xl font-semibold">Encontre o que Precisa</h2>
           <p className="mt-2 text-center">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
-            accusamus voluptatibus dicta, quam velit nisi soluta, recusandae
-            aliquid nostrum voluptas, aut quia. Placeat corporis incidunt
-            similique hic ullam culpa earum.
+            Busque por itens essenciais disponibilizados por doadores. Nossa
+            plataforma conecta quem doa e quem precisa de forma prática.
           </p>
         </div>
         <div className="bg-white text-black shadow-md p-6 rounded-md max-w-xl mx-auto">
-          <h2 className="text-xl font-semibold">Título 3</h2>
+          <h2 className="text-xl font-semibold">Acompanhe suas Doações</h2>
           <p className="mt-2 text-center">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem
-            mollitia odio suscipit dolores ullam. Aut consequuntur iusto
-            asperiores explicabo accusamus cumque autem, similique eos non,
-            exercitationem ea nulla expedita at.
+            Visualize e gerencie o status das suas doações. Tenha controle total
+            sobre o que já foi doado ou ainda está disponível.
           </p>
         </div>
         <div className="bg-white text-black shadow-md p-6 rounded-md max-w-xl mx-auto">
-          <h2 className="text-xl font-semibold">Título 4</h2>
+          <h2 className="text-xl font-semibold">Segurança e Simplicidade</h2>
           <p className="mt-2 text-center">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptates
-            earum, quaerat qui accusantium molestias animi voluptatibus
-            consequuntur nam possimus incidunt ea maiores nostrum provident cum
-            quod nisi enim eligendi! Voluptatum!
+            Utilizamos tecnologia avançada para garantir uma experiência
+            confiável e acessível para todos. Doe ou receba com tranquilidade!
           </p>
         </div>
       </div>
