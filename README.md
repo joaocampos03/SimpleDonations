@@ -1,6 +1,6 @@
 ## Projeto Integrador VI - Simple Donations
 
-Developed by Guilherme Santos, João Marcelo Campos, Kevin Molinari, and Thomas Batista
+Developed by Guilherme Santos, João Marcelo Campos, Kevin Molinari
 
 Back-End/API and Database: João Campos
 
